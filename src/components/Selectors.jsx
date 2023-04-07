@@ -1,37 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
+import { prompts, categories } from "../utils/prompts";
 
 const Selectors = () => {
+  const [category, setCategory] = useState("");
+  const [promptType, setPromptType] = useState("");
+
   return (
-    <div className="flex flex-col lg:flex-row justify-between w-full">
+    <div className="flex lg:flex-row lg:gap-6 flex-col w-full md:justify-start gap-1">
       <div>
         <label className="flex items-center ml-1 justify-start mb-1 text-gray-600">
           Enter Category
         </label>
         <select
+          onChange={(e) => setCategory(e.target.value)}
           id="countries"
-          class="bg-[#efeff2] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full md:px-28 px-20 overflow-y-auto"
+          className="bg-[#efeff2]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block lg:w-[300px] w-full  md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
         >
-          <option selected></option>
-          <option value="US">Type of failures</option>
-          <option value="CA">Levels of criticality</option>
-          <option value="FR">Days of downtime</option>
-          <option value="DE">Verssels affected</option>
+          <option value={category}></option>
+          {categories.map((item) => (
+            <option key={item.id} value={item.value}>
+              {item.name}
+            </option>
+          ))}
         </select>
       </div>
-
       <div>
         <label className="flex items-center justify-start ml-1 mt-5 lg:mt-0 mb-1 text-gray-600">
           Select your prompt
         </label>
         <select
+          onChange={(e) => setPromptType(e.target.value)}
           id="countries"
-          class="bg-[#efeff2] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full md:px-28 px-20 overflow-y-auto"
+          className="bg-[#efeff2]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block  lg:w-[300px] w-full md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
         >
-          <option selected></option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
+          <option value={promptType}></option>
+          {prompts.map((item) => (
+            <option key={item.id} value={item.value}>
+              {item.name}
+            </option>
+          ))}
         </select>
       </div>
     </div>

@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import Slider from "@mui/material/Slider";
 import { theme } from "../utils/themes";
 import { ThemeProvider } from "@emotion/react";
-import Switch from "@mui/material/Switch";
 import { BiPlus } from "react-icons/bi";
-import { AiOutlineUpload, AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
-import { MdDarkMode, MdOutlineDarkMode, MdHelp } from "react-icons/md";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
+import { MdHelp } from "react-icons/md";
 import { BsSun, BsSunFill } from "react-icons/bs";
-
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { FiLogOut } from "react-icons/fi";
+import { BiTrash } from "react-icons/bi";
+import Divider from "@mui/material/Divider";
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const SidebarNav = () => {
@@ -38,7 +37,7 @@ const SidebarNav = () => {
               <path d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
             </svg>
           </button>
-          <h1 class="flex-1 text-center text-base font-base">
+          <h1 className="flex-1 text-center text-base font-base">
             {showNav ? "Nano GPT" : ""}
           </h1>
 
@@ -78,11 +77,11 @@ const SidebarNav = () => {
                     href="#"
                     className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
                   >
-                    <span className="mr-3">Visualize Dataset</span>
+                    <span>Visualize Dataset</span>
                   </a>
                 </li>
               </div>
-              <div className="flex flex-col gap-4 order-2">
+              <div className="flex flex-col gap-0 order-2">
                 <li>
                   <h3 className="flex items-center p-2 rounded text-white text-lg mb-2 ">
                     <span className="flex-1 whitespace-nowrap"></span>
@@ -128,42 +127,56 @@ const SidebarNav = () => {
                   </div>
                 </li>
                 <li>
-                  <div className="flex items-center p-2 rounded text-white flex-col gap-3">
+                  <div className="flex items-center p-2 rounded text-white flex-col gap-">
                     <span className="flex-1 whitespace-nowrap"></span>
                     <input
-                      className="w-[70%] text-gray-500 py-2  text-xs rounded text-center bg-[#d1d1d1] focus:outline-none"
+                      className="w-[70%] text-gray-500 py-2  text-xs rounded text-center bg-[#d1d1d1] focus:outline-none mb-5"
                       placeholder="API KEY"
                     ></input>
                   </div>
                 </li>
-                <li>
-                  <div className="flex items-center justify-center mt-7 gap-5">
-                    {" "}
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={checked}
-                            onChange={handleChange}
-                            color="primary"
-                          />
-                        }
-                        className="text-white"
-                      />
-                    </FormGroup>{" "}
-                    <div className="ml-4">
-                      {checked ? (
-                        <BsSunFill size={25} className="text-gray-600" />
-                      ) : (
-                        <BsSun size={25} className="text-gray-600" />
-                      )}
-                    </div>
-                  </div>
+                <Divider light sx={{ height: "1.75px", bgcolor: "#919191" }} />
+                <li className="pt-4 flex flex-start">
+                  <a className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] mt-3 w-full">
+                    <BiTrash size={20} className="text-gray-100 mr-2" />
+
+                    <span className="mr-2 text-sm">Clear Conversations</span>
+                  </a>
                 </li>
-                <li>
-                  <a className="flex items-center justify-center gap-3 hover:cursor-pointer mt-2 mb-3">
-                    <MdHelp size={25} className="text-gray-600"></MdHelp>
-                    <span className="mr-3 text-gray-600">Help</span>
+                <li
+                  className="pt-4  flex flex-start"
+                  onClick={() => setChecked(!checked)}
+                >
+                  <a
+                    href="#"
+                    className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] w-full "
+                  >
+                    {!checked ? (
+                      <BsSunFill size={20} className="text-gray-600 mr-2" />
+                    ) : (
+                      <BsSun size={20} className="text-gray-200 mr-2" />
+                    )}
+                    <span className="mr-4 text-sm">Dark Mode</span>
+                  </a>
+                </li>
+                <li className="pt-4  flex flex-start">
+                  <a
+                    href="#"
+                    className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] w-full"
+                  >
+                    <FiLogOut size={20} className="text-gray-100 mr-2" />
+
+                    <span className="mr-2 text-sm">Log Out</span>
+                  </a>
+                </li>{" "}
+                <li className="pt-4  flex flex-start">
+                  <a
+                    href="#"
+                    className="flex items-center justify-start p-2 rounded text-white B2] hover:bg-[#a2a2a5] mb-3 w-full"
+                  >
+                    <MdHelp size={20} className="text-gray-100 mr-2" />
+
+                    <span className="text-sm">Help</span>
                   </a>
                 </li>
               </div>
