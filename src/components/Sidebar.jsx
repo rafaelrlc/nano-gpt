@@ -9,14 +9,30 @@ import { BsSun, BsSunFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import { BiTrash } from "react-icons/bi";
 import Divider from "@mui/material/Divider";
-
-const label = { inputProps: { "aria-label": "Switch demo" } };
+import { Link } from "react-router-dom";
+import { chats } from "../utils/prompts";
+import { useSettings } from "./context/Settings/SettingsContextProvider";
+import { debounce } from "lodash";
 const SidebarNav = () => {
+  const promptSettings = useSettings();
+
   const [showNav, setShowNav] = useState(true);
   const [checked, setChecked] = React.useState(true);
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const [apiInput, setApiInput] = useState(promptSettings.apiKey);
+
+  const handleApiChange = debounce((event) => {
+    promptSettings.setApiKey(event.target.value);
+  }, 500);
+
+  const handleInput = (event) => {
+    handleApiChange(event);
+    setApiInput(event.target.value);
+  };
+
+  const handleApiInputClear = () => {
+    promptSettings.setApiKey("");
+    setApiInput("");
   };
 
   return (
@@ -62,24 +78,50 @@ const SidebarNav = () => {
         >
           <div className="h-full py-2 overflow-y-auto bg-[#97979c]  w-[100%]">
             <ul className="space-y-2 font-medium text-center px-4 flex flex-col items-stretch h-full justify-between ">
-              <div className="flex flex-col gap-4 order-1">
+              <div className="flex flex-col gap-3 order-1">
                 <li className="pt-4">
-                  <a
-                    href="#"
+                  <Link
+                    to="/chat/new"
                     className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
                   >
                     <BiPlus size={20}></BiPlus>
-                    <span className="mr-2">New Chat</span>
-                  </a>
+                    <span className="mr-2 text-sm">New Chat</span>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/dataset"
                     className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
                   >
-                    <span>Visualize Dataset</span>
-                  </a>
+                    <span className="text-sm">Visualize Dataset</span>
+                  </Link>
                 </li>
+                <Divider
+                  light
+                  sx={{
+                    height: "1.75px",
+                    bgcolor: "#919191",
+                    marginTop: "0.5rem",
+                  }}
+                />
+                <p className="text-white mt-3 text-base">
+                  Previous Conversations
+                </p>
+                <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem]">
+                  {" "}
+                  {chats.map((chat) => {
+                    return (
+                      <li key={chat.id}>
+                        <Link
+                          to={`/chat/${chat.chatLink}`}
+                          className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
+                        >
+                          <span className="mr-1 text-sm">{chat.name}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </div>
               </div>
               <div className="flex flex-col gap-0 order-2">
                 <li>
@@ -87,60 +129,76 @@ const SidebarNav = () => {
                     <span className="flex-1 whitespace-nowrap"></span>
                   </h3>
                 </li>
-                <li className="flex flex-col items-center justify-center">
-                  <h3 className="flex items-center p-2 rounded text-white text-base">
-                    <span className="flex-1 whitespace-nowrap">
-                      Temperature
-                    </span>
-                  </h3>
-                  <div className="w-[80%]">
-                    {" "}
-                    <ThemeProvider theme={theme}>
+                <div className="bg-[#929296] rounded-lg p-7 mb-3">
+                  <li className="flex flex-col items-center justify-center">
+                    <h3 className="flex items-center  rounded text-white text-[0.9rem]">
+                      <span className="flex-1 whitespace-nowrap">
+                        Temperature
+                      </span>
+                    </h3>
+                    <div className="w-[80%]">
+                      {" "}
+                      <ThemeProvider theme={theme}>
+                        {" "}
+                        <Slider
+                          aria-label="Temperature"
+                          defaultValue={30}
+                          valueLabelDisplay="auto"
+                          step={5}
+                          marks
+                          min={10}
+                          max={110}
+                          color="primary"
+                        />
+                      </ThemeProvider>
+                    </div>
+                  </li>
+                  <li className="flex flex-col items-center justify-center">
+                    <h3 className="flex items-center  rounded text-white text-[0.9rem]">
+                      <span className="flex-1 whitespace-nowrap">Tokens</span>
+                    </h3>
+                    <div className="w-[80%]">
                       {" "}
                       <Slider
-                        aria-label="Temperature"
-                        defaultValue={30}
+                        aria-label="Tokens"
+                        defaultValue={0}
                         valueLabelDisplay="auto"
-                        step={5}
-                        marks
                         min={10}
                         max={110}
                         color="primary"
                       />
-                    </ThemeProvider>
-                  </div>
-                </li>
-                <li className="flex flex-col items-center justify-center">
-                  <h3 className="flex items-center p-2 rounded text-white text-base">
-                    <span className="flex-1 whitespace-nowrap">Tokens</span>
-                  </h3>
-                  <div className="w-[80%]">
-                    {" "}
-                    <Slider
-                      aria-label="Tokens"
-                      defaultValue={0}
-                      valueLabelDisplay="auto"
-                      min={10}
-                      max={110}
-                      color="primary"
-                    />
-                  </div>
-                </li>
-                <li>
-                  <div className="flex items-center p-2 rounded text-white flex-col gap-">
-                    <span className="flex-1 whitespace-nowrap"></span>
-                    <input
-                      className="w-[70%] text-gray-500 py-2  text-xs rounded text-center bg-[#d1d1d1] focus:outline-none mb-5"
-                      placeholder="API KEY"
-                    ></input>
-                  </div>
-                </li>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-center justify-center p-2 rounded text-white flex-col ">
+                      <span className="flex-1 whitespace-nowrap"></span>
+                      <div className="flex items-center justify-center gap-3">
+                        <input
+                          value={apiInput}
+                          onChange={handleInput}
+                          className="w-[80%] text-gray-500 py-2  text-xs rounded text-center bg-[#d1d1d1] focus:outline-none "
+                          placeholder="API KEY"
+                        ></input>{" "}
+                        <button
+                          onClick={handleApiInputClear}
+                          className="transform text-gray-600 hover:text-gray-600 bg-[#d1d1d1] p-2 rounded-lg focus:outline-none"
+                        >
+                          <BiTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                </div>
                 <Divider light sx={{ height: "1.75px", bgcolor: "#919191" }} />
-                <li className="pt-4 flex flex-start">
-                  <a className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] mt-3 w-full">
+                <li className="flex flex-start">
+                  <a
+                    href="#"
+                    onClick={() => console.log(promptSettings.apiKey)}
+                    className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] mt-3 w-full"
+                  >
                     <BiTrash size={20} className="text-gray-100 mr-2" />
 
-                    <span className="mr-2 text-sm">Clear Conversations</span>
+                    <span className="mr-2 text-sm ">Clear Conversations</span>
                   </a>
                 </li>
                 <li
@@ -172,7 +230,7 @@ const SidebarNav = () => {
                 <li className="pt-4  flex flex-start">
                   <a
                     href="#"
-                    className="flex items-center justify-start p-2 rounded text-white B2] hover:bg-[#a2a2a5] mb-3 w-full"
+                    className="flex items-center justify-start p-2 rounded text-white B2] hover:bg-[#a2a2a5] mb-2 w-full"
                   >
                     <MdHelp size={20} className="text-gray-100 mr-2" />
 

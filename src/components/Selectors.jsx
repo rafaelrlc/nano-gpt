@@ -14,7 +14,7 @@ const Selectors = () => {
         <select
           onChange={(e) => setCategory(e.target.value)}
           id="countries"
-          className="bg-[#efeff2]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block lg:w-[300px] w-full  md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
+          className="bg-[#f1f1f1]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block lg:w-[300px] w-full  md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
         >
           <option value={category}></option>
           {categories.map((item) => (
@@ -31,7 +31,7 @@ const Selectors = () => {
         <select
           onChange={(e) => setPromptType(e.target.value)}
           id="countries"
-          className="bg-[#efeff2]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block  lg:w-[300px] w-full md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
+          className="bg-[#f1f1f1]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block  lg:w-[300px] w-full md:px-28 px-20 overflow-y-auto hover:cursor-pointer"
         >
           <option value={promptType}></option>
           {prompts.map((item) => (

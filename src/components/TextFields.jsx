@@ -1,19 +1,16 @@
 import React, { useState } from "react";
-import TypeWriterEffect from "react-typewriter-effect";
 import AIWriter from "react-aiwriter";
 import toast, { Toaster } from "react-hot-toast";
-const responseTest =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. \
-Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer \
-took a galley of type and scrambled it to make a type specimen book. It has survived not only five \
-centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was \
-popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and \
-more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+import { BiCopy } from "react-icons/bi";
+import { useSettings } from "./context/Settings/SettingsContextProvider";
+import { responseTest } from "../utils/prompts";
 
 const TextFields = () => {
   const [gptResponse, setGptResponse] = useState(responseTest);
   const [charCount, setCharCount] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+
+  const promptSettings = useSettings();
 
   const handleTextareaChange = (event) => {
     setCharCount(event.target.value.length);
@@ -43,7 +40,7 @@ const TextFields = () => {
           <textarea
             id="message"
             rows="2"
-            className="block py-4 w-full text-base text-gray-900 bg-[#efeff2] rounded-lg border-gray-300 border-2"
+            className="block py-4 w-full text-base text-gray-900 bg-[#f1f1f1] rounded-lg border-gray-300 border-2"
             placeholder="Write your message here..."
             onChange={handleTextareaChange}
             maxLength={500}
@@ -74,7 +71,10 @@ const TextFields = () => {
           >
             Your answers:
           </label>
-          <div className="block py-32 px-3 w-full text-base overflow-y-auto text-gray-900 bg-[#eaeaed] rounded-lg border-gray-300 border-2 outline-none relative">
+          <div
+            className="block py-32 px-3 w-full text-base overflow-y-auto text-gray-900 
+          bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative"
+          >
             <div
               style={{
                 position: "absolute",
@@ -84,6 +84,7 @@ const TextFields = () => {
                 transform: "translateY(20px)",
               }}
             >
+              {" "}
               <AIWriter delay={25}>
                 <p className="text-gray-500">{gptResponse}</p>
               </AIWriter>
@@ -95,31 +96,32 @@ const TextFields = () => {
         <div>
           <button
             type="button"
-            className="py-2.5 md:px-7 px-3 mr-2 mb-2 text-sm font-medium  text-white  focus:outline-none bg-[#b8b8b8] rounded-lg border border-gray-200 hover:bg-[#a4a3a3]"
+            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium  text-white  focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
           >
             Stop
           </button>
           <button
             onClick={() => setGptResponse("")}
             type="button"
-            className="py-2.5 md:px-7 px-3  mr-2 mb-2 text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded-lg border border-gray-200 hover:bg-[#a4a3a3]"
+            className="py-2.5 md:px-7 px-3  mr-2  text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
           >
             Clean
           </button>
           <button
             type="button"
-            className="py-2.5 md:px-7 px-3 mr-2 mb-2 text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded-lg border border-gray-200 hover:bg-[#a4a3a3]"
+            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
           >
             Save
           </button>
 
           <button
             type="button"
-            className="py-2.5 md:px-7 px-3 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-[#b8b8b8] rounded-lg border border-gray-200 hover:bg-[#a4a3a3] active:bg-[#8d8c8c]"
+            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3] active:bg-[#8d8c8c]"
             onClick={copyToClipboard}
           >
-            Copy to Clipboard
+            Copy
           </button>
+
           <Toaster
             position="bottom-center"
             reverseOrder={false}
@@ -132,10 +134,11 @@ const TextFields = () => {
               },
             }}
           />
-        </div>{" "}
+        </div>
+
         <button
           type="button"
-          className="text-white font-bold  text-sm md:px-10 px-8 py-2.5 mr-2 mb-2 bg-[#999898] hover:bg-[#858585]  rounded-lg mt-[0.05rem]"
+          className="text-white  mb-1 font-medium text-sm md:px-10 px-8 py-2.5 bg-[#a4a4a4] hover:bg-[#8e8e8e]  rounded mt-[0.05rem]"
         >
           Go
         </button>
