@@ -7,7 +7,7 @@ import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { MdHelp } from "react-icons/md";
 import { BsSun, BsSunFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
-import { BiTrash } from "react-icons/bi";
+import { BiTrash, BiConversation } from "react-icons/bi";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
 import { chats } from "../utils/prompts";
@@ -107,16 +107,31 @@ const SidebarNav = () => {
                 <p className="text-white mt-3 text-base">
                   Previous Conversations
                 </p>
-                <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem]">
+                <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem] w-full">
                   {" "}
                   {chats.map((chat) => {
                     return (
-                      <li key={chat.id}>
+                      <li key={chat.id} className="">
                         <Link
                           to={`/chat/${chat.chatLink}`}
-                          className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
+                          className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5] gap-3"
                         >
-                          <span className="mr-1 text-sm">{chat.name}</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            stroke-strokeLinejoin="round"
+                          >
+                            <path d="M8 9h8"></path>
+                            <path d="M8 13h6"></path>
+                            <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
+                          </svg>
+                          <span className="mr-2 text-sm">{chat.name}</span>
                         </Link>
                       </li>
                     );
@@ -189,7 +204,14 @@ const SidebarNav = () => {
                     </div>
                   </li>
                 </div>
-                <Divider light sx={{ height: "1.75px", bgcolor: "#919191" }} />
+                <Divider
+                  light
+                  sx={{
+                    height: "1.75px",
+                    bgcolor: "#919191",
+                    marginTop: "0.65rem",
+                  }}
+                />
                 <li className="flex flex-start">
                   <a
                     href="#"
