@@ -16,11 +16,11 @@ const SettingsContextProvider = (props) => {
 
   const contextValue = {
     temperature: temperature,
-    tokens: tokens,
-    apiKey: apiKey,
+    tokens,
+    apiKey,
     setTemperature,
     setTokens,
-    setApiKey: setApiKey,
+    setApiKey,
   };
 
   return (
