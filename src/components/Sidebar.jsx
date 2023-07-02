@@ -1,25 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import Slider from "@mui/material/Slider";
+import Divider from "@mui/material/Divider";
 import { theme } from "../utils/themes";
 import { ThemeProvider } from "@emotion/react";
+
 import { BiPlus } from "react-icons/bi";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { MdHelp } from "react-icons/md";
 import { BsSun, BsSunFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
-import { BiTrash, BiConversation } from "react-icons/bi";
-import Divider from "@mui/material/Divider";
-import { Link } from "react-router-dom";
-import { chats } from "../utils/prompts";
-import { useSettings } from "./context/Settings/SettingsContextProvider";
+import { BiTrash } from "react-icons/bi";
+
+import { useSettings } from "../context/Settings/SettingsContextProvider";
 import { debounce } from "lodash";
+
+import AxiosApi from "../services/api";
+
 const SidebarNav = () => {
   const promptSettings = useSettings();
-
+  const { api } = AxiosApi();
+  const navigate = useNavigate();
   const [showNav, setShowNav] = useState(true);
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = useState(true);
 
   const [apiInput, setApiInput] = useState(promptSettings.apiKey);
+  const [tokenAmount, setTokenAmount] = useState(promptSettings.tokens);
+  const [temperatureAmount, setTemperatureAmount] = useState(
+    promptSettings.temperature
+  );
+  const [previousChats, setPreviousChats] = useState([]);
+
+  const fetchConvo = async () => {
+    try {
+      const response = await api.get("/getConversationsIds");
+      console.log(response);
+      setPreviousChats(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const clearConvo = async () => {
+    const response = await api.delete("/deleteAllConversation");
+    console.log(response);
+    setPreviousChats([]);
+  };
 
   const handleApiChange = debounce((event) => {
     promptSettings.setApiKey(event.target.value);
@@ -34,6 +62,32 @@ const SidebarNav = () => {
     promptSettings.setApiKey("");
     setApiInput("");
   };
+
+  const handleTemperatureChange = (event) => {
+    setTemperatureAmount(event.target.value);
+    promptSettings.setTemperature(event.target.value);
+  };
+
+  const handleTokenChange = (event) => {
+    setTokenAmount(event.target.value);
+    promptSettings.setTokens(event.target.value);
+  };
+
+  const newChat = async () => {
+    try {
+      const response = await api.post("/newConversation");
+      console.log(response);
+      navigate(`/chat/${response.data.conversationId}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      fetchConvo();
+    }
+  };
+
+  useEffect(() => {
+    fetchConvo();
+  }, []);
 
   return (
     <div>
@@ -80,13 +134,13 @@ const SidebarNav = () => {
             <ul className="space-y-2 font-medium text-center px-4 flex flex-col items-stretch h-full justify-between ">
               <div className="flex flex-col gap-3 order-1">
                 <li className="pt-4">
-                  <Link
-                    to="/chat/new"
+                  <a
+                    onClick={newChat}
                     className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
                   >
                     <BiPlus size={20}></BiPlus>
                     <span className="mr-2 text-sm">New Chat</span>
-                  </Link>
+                  </a>
                 </li>
                 <li>
                   <Link
@@ -96,47 +150,44 @@ const SidebarNav = () => {
                     <span className="text-sm">Visualize Dataset</span>
                   </Link>
                 </li>
-                <Divider
-                  light
-                  sx={{
-                    height: "1.75px",
-                    bgcolor: "#919191",
-                    marginTop: "0.5rem",
-                  }}
-                />
-                <p className="text-white mt-3 text-base">
-                  Previous Conversations
-                </p>
-                <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem] w-full">
-                  {" "}
-                  {chats.map((chat) => {
-                    return (
-                      <li key={chat.id} className="">
-                        <Link
-                          to={`/chat/${chat.chatLink}`}
-                          className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5] gap-3"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            stroke-strokeLinejoin="round"
+
+                {previousChats.length >= 1 && (
+                  <p className="text-white mt-3 text-base">
+                    Previous Conversations
+                  </p>
+                )}
+                {previousChats.length >= 1 && (
+                  <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem] w-full">
+                    {" "}
+                    {previousChats.map((chat) => {
+                      return (
+                        <li key={chat.id} className="">
+                          <Link
+                            to={`/chat/${chat._id}`}
+                            className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5] gap-3"
                           >
-                            <path d="M8 9h8"></path>
-                            <path d="M8 13h6"></path>
-                            <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
-                          </svg>
-                          <span className="mr-2 text-sm">{chat.name}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M8 9h8"></path>
+                              <path d="M8 13h6"></path>
+                              <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
+                            </svg>
+                            <span className="mr-2 text-sm">{chat.id}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-0 order-2">
                 <li>
@@ -157,13 +208,15 @@ const SidebarNav = () => {
                         {" "}
                         <Slider
                           aria-label="Temperature"
-                          defaultValue={30}
+                          defaultValue={0.7}
                           valueLabelDisplay="auto"
-                          step={5}
+                          step={0.05}
                           marks
-                          min={10}
-                          max={110}
+                          min={0}
+                          max={1}
                           color="primary"
+                          value={temperatureAmount}
+                          onChange={handleTemperatureChange}
                         />
                       </ThemeProvider>
                     </div>
@@ -176,11 +229,14 @@ const SidebarNav = () => {
                       {" "}
                       <Slider
                         aria-label="Tokens"
-                        defaultValue={0}
                         valueLabelDisplay="auto"
-                        min={10}
-                        max={110}
+                        defaultValue={850}
+                        step={100}
+                        min={0}
+                        max={4096}
                         color="primary"
+                        value={tokenAmount}
+                        onChange={handleTokenChange}
                       />
                     </div>
                   </li>
@@ -215,7 +271,7 @@ const SidebarNav = () => {
                 <li className="flex flex-start">
                   <a
                     href="#"
-                    onClick={() => console.log(promptSettings.apiKey)}
+                    onClick={clearConvo}
                     className="flex items-center justify-start p-2 rounded text-white  hover:bg-[#a2a2a5] mt-3 w-full"
                   >
                     <BiTrash size={20} className="text-gray-100 mr-2" />

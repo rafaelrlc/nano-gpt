@@ -31,4 +31,5 @@ const SettingsContextProvider = (props) => {
 };
 
 export default SettingsContextProvider;
+
 export const useSettings = () => useContext(SettingsContext);

@@ -40,11 +40,55 @@ export const chats = [
   { name: "Chat 16", id: 16, chatLink: "sdfdsf242423423232" },
 ];
 
-export const responseTest =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. \
-Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer \
-took a galley of type and scrambled it to make a type specimen book. It has survived not only five \
-centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was \
-popularised in the 1960s with the release of Letraset shscrambled it to make a type specimen book.  \
-centuries, but also the leap into electronic typesetting, remeets containing Lorem Ipsum passages, and \
-more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+export const responseTest = [
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+  [
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi quis maxime soluta, voluptatem ad quod cum, assumenda aspernatur doloribusplaceat labore tenetur quae ipsum tempore unde aliquid consequaturs",
+    "Lorem Ipsum is simply dummy text of the printing and typesettingindustry.",
+  ],
+];

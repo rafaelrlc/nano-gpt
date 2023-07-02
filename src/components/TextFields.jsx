@@ -1,35 +1,112 @@
-import React, { useState } from "react";
-import AIWriter from "react-aiwriter";
-import toast, { Toaster } from "react-hot-toast";
-import { BiCopy } from "react-icons/bi";
-import { useSettings } from "./context/Settings/SettingsContextProvider";
+import React, { useEffect, useState, useRef } from "react";
 import { responseTest } from "../utils/prompts";
-
+import { BsRobot, BsPerson } from "react-icons/bs";
+import { AiOutlineRobot } from "react-icons/ai";
+import { useParams } from "react-router-dom";
+import AxiosApi from "../services/api";
+//    <form className="flex flex-col" onSubmit={submitHandler}>
 const TextFields = () => {
-  const [gptResponse, setGptResponse] = useState(responseTest);
+  const { api } = AxiosApi();
+  const [gptDialogue, setGptDialogue] = useState([]);
   const [charCount, setCharCount] = useState(0);
   const [isEnding, setIsEnding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const promptSettings = useSettings();
+  const textFieldRef = useRef(null);
+  const answersDivRef = useRef(null);
+
+  const params = useParams();
+  const conversationID = params.id;
 
   const handleTextareaChange = (event) => {
     setCharCount(event.target.value.length);
   };
 
-  const copyToClipboard = (e) => {
-    const textarea = document.createElement("textarea");
-    const text = gptResponse;
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    textarea.remove();
-    toast.success("Copied to clipboard");
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (textFieldRef.current.value === "") return;
+
+    const newQuestion = { question: textFieldRef.current.value };
+    const userQuestion = [newQuestion.question, ""];
+    textFieldRef.current.value = "";
+
+    setGptDialogue((prevDialogue) => [...prevDialogue, userQuestion]); // Add userQuestion to the gptDialogue state
+    scrollAnswersToBottom();
+
+    try {
+      await api.post(`/question/${conversationID}`, newQuestion);
+      getDialogue();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const getDialogue = async () => {
+    try {
+      const response = await api.get(`/getConversation/${conversationID}`);
+      setGptDialogue(response.data.history);
+      scrollAnswersToBottom();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const scrollAnswersToBottom = () => {
+    if (answersDivRef.current) {
+      answersDivRef.current.scrollTop = answersDivRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    console.log(conversationID);
+    getDialogue();
+  }, [conversationID]);
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-3">
+      <div>
+        <label
+          htmlFor="message"
+          className="block mb-2 ml-2 text-xl text-gray-700"
+        >
+          Your answers:
+        </label>
+        {gptDialogue.length > 0 ? (
+          <div
+            ref={answersDivRef}
+            className="block p-2 w-full text-base overflow-y-auto text-gray-900 
+      bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative max-h-[400px] min-h-[400px]"
+          >
+            <ul className="flex flex-col">
+              {gptDialogue.map((item) => (
+                <li className="flex flex-col gap-5 p-2 py-4 rounded-xl">
+                  <div className="bg-[#f2f2f2] p-2 rounded-lg flex items-center gap-3">
+                    <BsPerson className="text-gray-700 " />
+                    <p>{item[0]}</p>
+                  </div>
+                  <div className="bg-[#e9e9e9] p-2 rounded-lg flex items-center gap-3">
+                    <AiOutlineRobot className="text-gray-700 text-xl" />
+                    <p className="text-base">{item[1]}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div
+            className="p-2 w-full text-base overflow-y-auto text-gray-900 text-center items-center flex justify-center
+          bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative max-h-[400px] min-h-[400px]"
+          >
+            <h1 className="text-xl text-gray-500">Ask a Question</h1>
+          </div>
+        )}
+      </div>
+
+      <form className="flex flex-col gap-3" onSubmit={submitHandler}>
         <div>
           <label
             htmlFor="message"
@@ -40,10 +117,11 @@ const TextFields = () => {
           <textarea
             id="message"
             rows="2"
-            className="block py-4 w-full text-base text-gray-900 bg-[#f1f1f1] rounded-lg border-gray-300 border-2"
+            className="block py-4 w-full  text-gray-900 bg-[#f1f1f1] rounded-lg border-gray-300 border-2 focus:ring-gray-300 focus:border-gray-300 "
             placeholder="Write your message here..."
             onChange={handleTextareaChange}
             maxLength={500}
+            ref={textFieldRef}
             onInput={(event) => {
               const input = event.target.value;
               const maxLength = event.target.maxLength;
@@ -63,86 +141,21 @@ const TextFields = () => {
             </span>{" "}
             / 500
           </p>
+        </div>{" "}
+        <div className="flex justify-end items-center">
+          <button
+            disabled={textFieldRef.current.value == "" ? true : false}
+            type="submit"
+            className={`text-white  mb-1 font-medium text-sm md:px-10 px-8 py-2.5 bg-[#a4a4a4] hover:bg-[#8e8e8e] rounded mt-[0.05rem] ${
+              textFieldRef.current.value === ""
+                ? "bg-[#a4a4a4]"
+                : "bg-[#8ed269]"
+            }`}
+          >
+            Go
+          </button>
         </div>
-        <div>
-          <label
-            htmlFor="message"
-            className="block mb-2 ml-2 text-xl text-gray-700"
-          >
-            Your answers:
-          </label>
-          <div
-            className="block py-32 px-3 w-full text-base overflow-y-auto text-gray-900 
-          bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative"
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: "20px",
-                right: "20px",
-                transform: "translateY(20px)",
-              }}
-            >
-              {" "}
-              <AIWriter delay={25}>
-                <p className="text-gray-500">{gptResponse}</p>
-              </AIWriter>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-between items-center">
-        <div>
-          <button
-            type="button"
-            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium  text-white  focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
-          >
-            Stop
-          </button>
-          <button
-            onClick={() => setGptResponse("")}
-            type="button"
-            className="py-2.5 md:px-7 px-3  mr-2  text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
-          >
-            Clean
-          </button>
-          <button
-            type="button"
-            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium  text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3]"
-          >
-            Save
-          </button>
-
-          <button
-            type="button"
-            className="py-2.5 md:px-7 px-3 mr-2  text-sm font-medium text-white focus:outline-none bg-[#b8b8b8] rounded border border-gray-200 hover:bg-[#a4a3a3] active:bg-[#8d8c8c]"
-            onClick={copyToClipboard}
-          >
-            Copy
-          </button>
-
-          <Toaster
-            position="bottom-center"
-            reverseOrder={false}
-            toastOptions={{
-              success: {
-                style: {
-                  background: "#f0f0f0",
-                  color: "#333333",
-                },
-              },
-            }}
-          />
-        </div>
-
-        <button
-          type="button"
-          className="text-white  mb-1 font-medium text-sm md:px-10 px-8 py-2.5 bg-[#a4a4a4] hover:bg-[#8e8e8e]  rounded mt-[0.05rem]"
-        >
-          Go
-        </button>
-      </div>
+      </form>
     </div>
   );
 };
