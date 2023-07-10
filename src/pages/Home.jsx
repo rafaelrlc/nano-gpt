@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Layout/Sidebar";
 import Navbar from "../components/Navbar";
 import Selectors from "../components/Selectors";
 import Footer from "../components/Layout/Footer";
@@ -7,7 +7,7 @@ import TextFields from "../components/TextFields";
 
 const Home = () => {
   return (
-    <div>
+    <div className="">
       <Sidebar></Sidebar>
       <div className="flex items-center justify-center h-full ">
         <div className="md:ml-72 px-5 max-w-[1440px] w-full">
@@ -15,8 +15,7 @@ const Home = () => {
             <Navbar />
             <Selectors />
             <TextFields />
-
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </div>
       </div>

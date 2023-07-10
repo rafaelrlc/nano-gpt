@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import DatasetPage from "./pages/DatasetPage";
-import Homepage from "./pages/Homepage";
 
 const AppRoutes = () => {
   return (
@@ -16,7 +15,7 @@ const AppRoutes = () => {
         path={"/"}
         element={<Navigate to={"/chat/new"}></Navigate>}
       ></Route>
-      <Route path={"/chat/new"} element={<Homepage></Homepage>}></Route>
+      <Route path={"/chat/new"} element={<Home newPage={true}></Home>}></Route>
       <Route path={"/chat/:id"} element={<Home></Home>}></Route>
 
       <Route path={"/dataset"} element={<DatasetPage></DatasetPage>}></Route>

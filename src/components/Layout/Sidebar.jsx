@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Slider from "@mui/material/Slider";
 import Divider from "@mui/material/Divider";
-import { theme } from "../utils/themes";
+import { theme } from "../../utils/themes";
 import { ThemeProvider } from "@emotion/react";
 
 import { BiPlus } from "react-icons/bi";
@@ -14,18 +14,19 @@ import { BsSun, BsSunFill } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import { BiTrash } from "react-icons/bi";
 
-import { useSettings } from "../context/Settings/SettingsContextProvider";
+import { useSettings } from "../../context/Settings/SettingsContextProvider";
 import { debounce } from "lodash";
 
-import AxiosApi from "../services/api";
+import AxiosApi from "../../services/api";
 
-const SidebarNav = () => {
+const Sidebar = () => {
   const promptSettings = useSettings();
+
   const { api } = AxiosApi();
   const navigate = useNavigate();
+
   const [showNav, setShowNav] = useState(true);
   const [checked, setChecked] = useState(true);
-
   const [apiInput, setApiInput] = useState(promptSettings.apiKey);
   const [tokenAmount, setTokenAmount] = useState(promptSettings.tokens);
   const [temperatureAmount, setTemperatureAmount] = useState(
@@ -139,7 +140,9 @@ const SidebarNav = () => {
                     className="flex items-center justify-center p-2 rounded text-white bg-[#AEAEB2] hover:bg-[#a2a2a5]"
                   >
                     <BiPlus size={20}></BiPlus>
-                    <span className="mr-2 text-sm">New Chat</span>
+                    <span className="mr-2 text-sm hover:cursor-pointer">
+                      New Chat
+                    </span>
                   </a>
                 </li>
                 <li>
@@ -152,9 +155,7 @@ const SidebarNav = () => {
                 </li>
 
                 {previousChats.length >= 1 && (
-                  <p className="text-white mt-3 text-base">
-                    Previous Conversations
-                  </p>
+                  <p className="text-white mt-3 text-base">Previous Chats</p>
                 )}
                 {previousChats.length >= 1 && (
                   <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem] w-full">
@@ -232,7 +233,7 @@ const SidebarNav = () => {
                         valueLabelDisplay="auto"
                         defaultValue={850}
                         step={100}
-                        min={0}
+                        min={100}
                         max={4096}
                         color="primary"
                         value={tokenAmount}
@@ -276,7 +277,7 @@ const SidebarNav = () => {
                   >
                     <BiTrash size={20} className="text-gray-100 mr-2" />
 
-                    <span className="mr-2 text-sm ">Clear Conversations</span>
+                    <span className="mr-2 text-sm ">Clear Chats</span>
                   </a>
                 </li>
                 <li
@@ -324,4 +325,4 @@ const SidebarNav = () => {
   );
 };
 
-export default SidebarNav;
+export default Sidebar;

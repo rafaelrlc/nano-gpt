@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useContext } from "react";
+
 const SettingsContext = React.createContext({
   temperature: 0,
-  tokens: 0,
+  tokens: 400,
   apiKey: "",
   setTemperature: () => {},
   setTokens: () => {},
@@ -11,7 +12,7 @@ const SettingsContext = React.createContext({
 
 const SettingsContextProvider = (props) => {
   const [temperature, setTemperature] = useState(0);
-  const [tokens, setTokens] = useState(0);
+  const [tokens, setTokens] = useState(400);
   const [apiKey, setApiKey] = useState("");
 
   const contextValue = {

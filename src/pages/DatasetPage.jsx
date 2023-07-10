@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Layout/Sidebar";
 import Navbar from "../components/Navbar";
 import Dataset from "../components/Dataset";
 
