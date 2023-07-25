@@ -78,12 +78,6 @@ const TextFields = () => {
         submitHandler(event);
       }
     };
-
-    textFieldRef.current.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      textFieldRef.current.removeEventListener("keydown", handleKeyDown);
-    };
   }, []);
 
   const buttonState = isLoading

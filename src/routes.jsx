@@ -20,14 +20,14 @@ const AppRoutes = () => {
 
       <Route path={"/dataset"} element={<DatasetPage></DatasetPage>}></Route>
 
-      <Route
+      {/* <Route
         path={"/login"}
         element={<LoginPage type={"login"}></LoginPage>}
       ></Route>
       <Route
         path={"/create"}
         element={<LoginPage type={"register"}></LoginPage>}
-      ></Route>
+      ></Route> */}
     </Routes>
   );
 };

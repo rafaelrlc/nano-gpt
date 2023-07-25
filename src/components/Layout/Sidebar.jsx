@@ -159,7 +159,6 @@ const Sidebar = () => {
                 )}
                 {previousChats.length >= 1 && (
                   <div className="flex flex-col gap-2 bg-[#949498] p-4 overflow-y-auto h-[10rem] w-full">
-                    {" "}
                     {previousChats.map((chat) => {
                       return (
                         <li key={chat.id} className="">

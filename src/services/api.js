@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3004/controller";
+const BASE_URL = "http://localhost:3004/question";
 
 const AxiosApi = () => {
   const api = axios.create({
