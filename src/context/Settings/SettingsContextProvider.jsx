@@ -14,6 +14,7 @@ const SettingsContextProvider = (props) => {
   const [temperature, setTemperature] = useState(0);
   const [tokens, setTokens] = useState(400);
   const [apiKey, setApiKey] = useState("");
+  const [activeConversationId, setActiveConversationId] = useState("");
 
   const contextValue = {
     temperature: temperature,

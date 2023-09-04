@@ -1,22 +1,22 @@
 import React from "react";
 import { ThreeDots } from "react-loader-spinner";
-import { BsRobot, BsPerson } from "react-icons/bs";
+import { BsPerson } from "react-icons/bs";
 import { AiOutlineRobot } from "react-icons/ai";
 
 const ChatBot = ({ dialogue }) => {
   return (
     <div>
       {dialogue.map((item) => (
-        <li className="flex flex-col gap-5 p-2 py-4 rounded-xl">
-          <div className="bg-[#f2f2f2] p-2 rounded-lg flex items-center gap-3">
-            <BsPerson className="text-gray-700 " />
-            <p>{item[0]}</p>
+        <li className="flex flex-col gap-5 rounded-xl">
+          <div className="bg-[#f2f2f2] dark:bg-[#606060] dark:text-gray-100 p-2 rounded-lg flex items-center gap-3 break-all">
+            <BsPerson className="text-gray-700 dark:text-gray-100  " />
+            <p>{item.question}</p>
           </div>
-          <div className="bg-[#e9e9e9] p-2 rounded-lg flex items-center gap-3">
-            <AiOutlineRobot className="text-gray-700 text-xl" />
+          <div className="bg-[#e9e9e9] dark:bg-[#606060] dark:text-gray-100 p-2 rounded-lg flex items-center gap-3 mb-[1.25rem] break-all">
+            <AiOutlineRobot className="text-gray-700 dark:text-gray-100 text-xl" />
             <div className="text-base">
-              {item[1].length > 0 ? (
-                item[1]
+              {item.response.length > 0 ? (
+                item.response
               ) : (
                 <ThreeDots
                   height="30"

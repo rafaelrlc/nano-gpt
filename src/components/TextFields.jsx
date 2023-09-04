@@ -1,12 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import AxiosApi from "../services/api";
 import { useSettings } from "../context/Settings/SettingsContextProvider";
 import ChatBot from "./ChatBot";
 
-const TextFields = () => {
+const TextFields = ({ newPage }) => {
   const { api } = AxiosApi();
   const { temperature, tokens } = useSettings();
+  const navigate = useNavigate();
 
   const [gptDialogue, setGptDialogue] = useState([]);
   const [question, setQuestion] = useState(0);
@@ -22,6 +23,15 @@ const TextFields = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    if (newPage) {
+      try {
+        const response = await api.post("/conversation/new");
+        navigate(`/chat/${response.data.conversationId}`);
+        fetchConvo();
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     if (textFieldRef.current.value === "") {
       setIsLoading(false);
@@ -34,7 +44,10 @@ const TextFields = () => {
       token: tokens,
     };
 
-    const userQuestion = [textFieldRef.current.value, ""];
+    const userQuestion = {
+      question: textFieldRef.current.value,
+      response: "",
+    };
 
     setQuestion("");
     textFieldRef.current.value = "";
@@ -43,7 +56,8 @@ const TextFields = () => {
     scrollAnswersToBottom();
 
     try {
-      await api.post(`/question/${conversationID}`, data);
+      console.log("conversaiotn id", conversationID);
+      await api.post(`/${conversationID}`, data);
       getDialogue();
     } catch (error) {
       console.log(error);
@@ -54,8 +68,9 @@ const TextFields = () => {
 
   const getDialogue = async () => {
     try {
-      const response = await api.get(`/getConversation/${conversationID}`);
+      const response = await api.get(`/${conversationID}`);
       setGptDialogue(response.data.history);
+      console.log(response.data.history);
       scrollAnswersToBottom();
     } catch (error) {
       console.log(error);
@@ -72,61 +87,41 @@ const TextFields = () => {
     getDialogue();
   }, [conversationID]);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        submitHandler(event);
-      }
-    };
-  }, []);
-
   const buttonState = isLoading
     ? "bg-[#4d4d4d]"
     : question.length > 0
     ? "bg-green-400 hover:bg-green-600"
-    : "bg-[#a4a4a4] hover:bg-[#8e8e8e]";
+    : "bg-[#a4a4a4] dark:bg-[#747474] hover:bg-[#8e8e8e] hover:dark:bg-[#5b5b5b]";
 
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <label
-          htmlFor="message"
-          className="block mb-2 ml-2 text-xl text-gray-700"
-        >
+        <label className="block mb-2 ml-2 text-xl text-gray-700 dark:text-gray-200">
           Your answers:
         </label>
-        {gptDialogue.length > 0 ? (
-          <div
-            ref={answersDivRef}
-            className="block p-2 w-full text-base overflow-y-auto text-gray-900 
-      bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative max-h-[400px] min-h-[400px]"
-          >
-            <ul className="flex flex-col">
-              <ChatBot dialogue={gptDialogue}></ChatBot>
-            </ul>
-          </div>
-        ) : (
-          <div
-            className="p-2 w-full text-base overflow-y-auto text-gray-900 text-center items-center flex justify-center
-          bg-[#f1f1f1] rounded-lg border-gray-300 border-2 outline-none relative max-h-[400px] min-h-[400px]"
-          >
-            <h1 className="text-xl text-gray-500">Ask a Question</h1>
-          </div>
-        )}
+        <div
+          ref={answersDivRef}
+          className="block p-2 w-full text-base overflow-y-auto text-gray-900  
+      bg-[#f5f5f5] dark:bg-[#484848]  rounded-lg border-gray-300  border-2 outline-none relative md:h-[60vh] h-[50vh] "
+        >
+          <ul className="flex flex-col">
+            <ChatBot dialogue={gptDialogue}></ChatBot>
+          </ul>
+        </div>
       </div>
 
       <form className="flex flex-col gap-3" onSubmit={submitHandler}>
         <div>
           <label
             htmlFor="message"
-            className="block mb-2 ml-2 text-xl text-gray-700"
+            className="block mb-2 ml-2 text-xl text-gray-700 dark:text-gray-200"
           >
             Enter your prompts:
           </label>
-          <textarea
+          <input
             id="message"
             rows="1"
-            className="block py-4 w-full  text-gray-900 bg-[#f1f1f1] rounded-lg border-gray-300 border-2 focus:ring-gray-300 focus:border-gray-300 "
+            className="block py-4 px-2 mb-2 w-full  text-gray-900 dark:text-gray-200 dark:placeholder-gray-300 bg-[#f5f5f5] dark:bg-[#484848] rounded-lg border-gray-300 dark:border-gray-400 border-2 focus:ring-gray-300 focus:border-gray-300 "
             placeholder="Write your message here..."
             onChange={(event) => {
               setQuestion(event.target.value);
@@ -144,9 +139,13 @@ const TextFields = () => {
                 setIsEnding(false);
               }
             }}
-          ></textarea>
-          <p className={`text-right text-gray-500`}>
-            <span className={` ${isEnding ? "text-red-500" : "text-gray-500"}`}>
+          ></input>
+          <p className={`text-right text-gray-500 dark:text-gray-200`}>
+            <span
+              className={` ${
+                isEnding ? "text-red-500" : "text-gray-500 dark:text-gray-200"
+              }`}
+            >
               {question.length ? question.length : 0}
             </span>{" "}
             / {300}
@@ -156,7 +155,7 @@ const TextFields = () => {
           <button
             disabled={isLoading ? true : false}
             type="submit"
-            className={`text-white mb-1 font-medium text-sm md:px-10 px-8 py-2.5  ${buttonState} rounded mt-[0.05rem]`}
+            className={`text-white mb-1 font-medium text-sm md:px-10 px-8 py-2.5 w-full md:w-auto  ${buttonState} rounded mt-[0.05rem]`}
           >
             Go
           </button>

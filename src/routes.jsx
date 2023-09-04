@@ -7,15 +7,9 @@ import DatasetPage from "./pages/DatasetPage";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route
-        path={"*"}
-        element={<Navigate to={"/chat/new"}></Navigate>}
-      ></Route>
-      <Route
-        path={"/"}
-        element={<Navigate to={"/chat/new"}></Navigate>}
-      ></Route>
-      <Route path={"/chat/new"} element={<Home newPage={true}></Home>}></Route>
+      <Route path={"*"} element={<Navigate to={"/chat"}></Navigate>}></Route>
+      <Route path={"/"} element={<Navigate to={"/chat"}></Navigate>}></Route>
+      <Route path={"/chat"} element={<Home newPage={true}></Home>}></Route>
       <Route path={"/chat/:id"} element={<Home></Home>}></Route>
 
       <Route path={"/dataset"} element={<DatasetPage></DatasetPage>}></Route>
