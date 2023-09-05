@@ -10,4 +10,8 @@ export default {
     extend: {},
   },
   plugins: [require("flowbite/plugin")],
+  baseUrl: ".",
+  paths: {
+    "@/*": ["./src/*"],
+  },
 };
