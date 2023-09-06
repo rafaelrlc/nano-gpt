@@ -5,9 +5,9 @@ import { AiOutlineRobot } from "react-icons/ai";
 
 const ChatBot = ({ dialogue }) => {
   return (
-    <div>
+    <div className="">
       {dialogue.map((item) => (
-        <li className="flex flex-col gap-5 rounded-xl">
+        <li className="flex flex-col gap-5 rounded-xl " key={item._id}>
           <div className="bg-[#f2f2f2] dark:bg-[#606060] dark:text-gray-100 p-2 rounded-lg flex items-center gap-3 break-all">
             <BsPerson className="text-gray-700 dark:text-gray-100  " />
             <p>{item.question}</p>

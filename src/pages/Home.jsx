@@ -28,14 +28,11 @@ const Home = ({ newPage }) => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
   return (
-    <div className="bg-gray-100 dark:bg-[#333333] md:h-full h-screen">
+    <div>
       <Sidebar handleThemeSwitch={handleThemeSwitch}></Sidebar>
-      <div className="flex items-center justify-center h-full ">
-        <div className="md:ml-72 px-5 w-full">
-          <div className="py-5 px-3 flex justify-between flex-col gap-7">
-            <TextFields newPage={newPage} />
-            <Footer />
-          </div>
+      <div className="flex items-center justify-center">
+        <div className="md:ml-72 px-5 w-full bg-gray-100 dark:bg-[#333333]">
+          <TextFields newPage={newPage} />
         </div>
       </div>
     </div>

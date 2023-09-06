@@ -1,13 +1,12 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import AxiosApi from "../services/api";
 import { useSettings } from "../context/Settings/SettingsContextProvider";
 import ChatBot from "./ChatBot";
 
-const TextFields = ({ newPage }) => {
+const TextFields = () => {
   const { api } = AxiosApi();
   const { temperature, tokens } = useSettings();
-  const navigate = useNavigate();
 
   const [gptDialogue, setGptDialogue] = useState([]);
   const [question, setQuestion] = useState(0);
@@ -23,15 +22,6 @@ const TextFields = ({ newPage }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (newPage) {
-      try {
-        const response = await api.post("/conversation/new");
-        navigate(`/chat/${response.data.conversationId}`);
-        fetchConvo();
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
     if (textFieldRef.current.value === "") {
       setIsLoading(false);
@@ -94,34 +84,28 @@ const TextFields = ({ newPage }) => {
     : "bg-[#a4a4a4] dark:bg-[#747474] hover:bg-[#8e8e8e] hover:dark:bg-[#5b5b5b]";
 
   return (
-    <div className="flex flex-col gap-3">
-      <div>
+    <div className="flex flex-col gap-8 justify-between h-screen">
+      {/* Chat */}
+      <div className="mt-8 ">
         <label className="block mb-2 ml-2 text-xl text-gray-700 dark:text-gray-200">
           Your answers:
         </label>
-        <div
+        <ul
           ref={answersDivRef}
-          className="block p-2 w-full text-base overflow-y-auto text-gray-900  
-      bg-[#f5f5f5] dark:bg-[#484848]  rounded-lg border-gray-300  border-2 outline-none relative md:h-[60vh] h-[50vh] "
+          className="flex flex-col overflow-y-auto  no-scrollbar h-[65vh]"
         >
-          <ul className="flex flex-col">
-            <ChatBot dialogue={gptDialogue}></ChatBot>
-          </ul>
-        </div>
+          <ChatBot dialogue={gptDialogue}></ChatBot>
+        </ul>
       </div>
 
-      <form className="flex flex-col gap-3" onSubmit={submitHandler}>
+      {/* Input Form */}
+      <form className="flex flex-col gap-3 mb-4" onSubmit={submitHandler}>
         <div>
-          <label
-            htmlFor="message"
-            className="block mb-2 ml-2 text-xl text-gray-700 dark:text-gray-200"
-          >
+          <label className="block mb-2 ml-2 text-xl text-gray-700 dark:text-gray-200">
             Enter your prompts:
           </label>
           <input
-            id="message"
-            rows="1"
-            className="block py-4 px-2 mb-2 w-full  text-gray-900 dark:text-gray-200 dark:placeholder-gray-300 bg-[#f5f5f5] dark:bg-[#484848] rounded-lg border-gray-300 dark:border-gray-400 border-2 focus:ring-gray-300 focus:border-gray-300 "
+            className="block py-4 px-2 mb-2 w-full  text-gray-900 dark:text-gray-200 dark:placeholder-gray-300 bg-[#f5f5f5] dark:bg-[#484848] rounded-lg border-gray-300 dark:border-gray-400 border-2 outline-none "
             placeholder="Write your message here..."
             onChange={(event) => {
               setQuestion(event.target.value);
@@ -147,10 +131,10 @@ const TextFields = ({ newPage }) => {
               }`}
             >
               {question.length ? question.length : 0}
-            </span>{" "}
+            </span>
             / {300}
           </p>
-        </div>{" "}
+        </div>
         <div className="flex justify-end items-center">
           <button
             disabled={isLoading ? true : false}
